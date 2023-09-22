@@ -8,7 +8,7 @@ import type { Express, Request, Response } from 'express';
 const app: Express = express();
 const port = 5000;
 
-// initalize OpenAI API
+// initalize
 const openai = new OpenAI({ apiKey: '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' });
 
 // middleware

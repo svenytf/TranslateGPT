@@ -1,20 +1,23 @@
-<script>
+<script lang="ts">
 	// Set default language
-	let langFrom = 'en';
-	let langTo = 'de';
+	let langFrom: string = 'en';
+	let langTo: string = 'de';
 
 	// Initialize input and output
-	let input = '';
-	let output = '';
+	let input: string = '';
+	let output: string = '';
 
 	// Initialize context
-	let context = '';
+	let context: string = '';
+
+	// Initialize input file
+	let inputFile: FileList | null;
 
 	// Initialize disabled state of input
-	let inputDisabled = false;
+	let inputDisabled: boolean = false;
 
 	// Initialize languages
-	let languages = [
+	let languages: Array<{ shortcode: string; name: string }> = [
 		{ shortcode: 'en', name: 'English' },
 		{ shortcode: 'de', name: 'German' },
 		{ shortcode: 'fr', name: 'French' },
@@ -34,13 +37,26 @@
 		{ shortcode: 'tr', name: 'Turkish' },
 		{ shortcode: 'pl', name: 'Polish' },
 		{ shortcode: 'fi', name: 'Finnish' },
-		{ shortcode: 'el', name: 'Greek' }
+		{ shortcode: 'el', name: 'Greek' },
+		{ shortcode: 'cs', name: 'Czech' },
+		{ shortcode: 'hu', name: 'Hungarian' },
+		{ shortcode: 'id', name: 'Indonesian' },
+		{ shortcode: 'ms', name: 'Malay' },
+		{ shortcode: 'th', name: 'Thai' },
+		{ shortcode: 'uk', name: 'Ukrainian' },
+		{ shortcode: 'vi', name: 'Vietnamese' },
+		{ shortcode: 'pirate', name: 'Pirate' },
+		{ shortcode: 'yoda', name: 'Yoda' },
+		{ shortcode: 'minion', name: 'Minion' }
 	];
 
-	// Initialize timeout controller for fetch in case of timeout
-	const timeoutController = new AbortController();
-
-	const timeoutId = setTimeout(() => timeoutController.abort(), 40000);
+	// Function for reading file and setting input
+	async function readFileInput(file: File) {
+		// Set input to file content
+		file.text().then((text) => {
+			input = text;
+		});
+	}
 
 	// Function to translate input
 	async function translate() {
@@ -68,24 +84,18 @@
 				context: context,
 				langFrom: langFrom,
 				langTo: langTo
-			}),
-			signal: timeoutController.signal
-		}).catch((err) => {
-			console.log(err);
-			output = 'Error: ' + err;
+			})
 		});
 
 		if (response === undefined) {
 			// Set output to error
-			output = 'Error: Request timed out.';
+			output = 'Error: Unknown error.';
 		} else {
 			// Check if response is not OK
 			if (response.status !== 200) {
 				// Set output to error
 				output = 'Error: ' + response.status + ' ' + response.statusText;
 			} else {
-				// Clear timeout
-				clearTimeout(timeoutId);
 				// Get response as JSON
 				const data = await response.json();
 				console.log(data);
@@ -95,6 +105,12 @@
 
 		// Re-enable input
 		inputDisabled = false;
+	}
+
+	$: {
+		if (inputFile) {
+			readFileInput(inputFile[0]);
+		}
 	}
 </script>
 
@@ -141,6 +157,7 @@
 					placeholder="Context or hint"
 					bind:value={context}
 				/>
+				<input type="file" id="input-file" name="input-file" bind:files={inputFile} accept=".txt" />
 				<button id="translate-button" on:click={translate}>Translate</button>
 			</div>
 		</div>

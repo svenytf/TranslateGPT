@@ -1,22 +1,29 @@
 import express from 'express';
 import OpenAI from 'openai';
 import cors from 'cors';
+// initalize express
 const app = express();
 const port = 5000;
-// initalize OpenAI API
+// initalize
 const openai = new OpenAI({ apiKey: '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' });
+// middleware
 app.use(cors());
 app.use(express.json());
+// routes
+// translation route
 app.post('/translate', (req, res) => {
+	// check if request is valid
 	if (!req.body.langFrom || !req.body.langTo || !req.body.input) {
+		// if not, send 400 error
 		res.status(400).send('Bad request');
 		return;
 	}
-	console.log(req.body);
+	// get input and output languages from request
 	const inputLang = req.body.langFrom;
 	const outputLang = req.body.langTo;
 	const input = req.body.input;
 	const context = req.body.context;
+	// initalise messages array for OpenAI API
 	const messages = [
 		{
 			role: 'system',
@@ -44,12 +51,13 @@ app.post('/translate', (req, res) => {
 			messages: messages
 		})
 		.then((response) => {
-			console.log(response);
+			// send response
 			res.send({
 				output: response.choices[0].message.content
 			});
 		});
 });
+// start server
 app.listen(port, () => {
 	console.log(`Backend listening at http://192.168.0.165:${port}`);
 });
