@@ -17,35 +17,35 @@
 	let inputDisabled: boolean = false;
 
 	// Initialize languages
-	let languages: Array<{ shortcode: string; name: string }> = [
-		{ shortcode: 'en', name: 'English' },
-		{ shortcode: 'de', name: 'German' },
-		{ shortcode: 'fr', name: 'French' },
-		{ shortcode: 'es', name: 'Spanish' },
-		{ shortcode: 'it', name: 'Italian' },
-		{ shortcode: 'pt', name: 'Portuguese' },
-		{ shortcode: 'ru', name: 'Russian' },
-		{ shortcode: 'zh', name: 'Chinese (Mandarin)' },
-		{ shortcode: 'ja', name: 'Japanese' },
-		{ shortcode: 'ko', name: 'Korean' },
-		{ shortcode: 'sv', name: 'Swedish' },
-		{ shortcode: 'nl', name: 'Dutch' },
-		{ shortcode: 'no', name: 'Norwegian' },
-		{ shortcode: 'da', name: 'Danish' },
-		{ shortcode: 'ar', name: 'Arabic' },
-		{ shortcode: 'hi', name: 'Hindi' },
-		{ shortcode: 'tr', name: 'Turkish' },
-		{ shortcode: 'pl', name: 'Polish' },
-		{ shortcode: 'fi', name: 'Finnish' },
-		{ shortcode: 'el', name: 'Greek' },
-		{ shortcode: 'cs', name: 'Czech' },
-		{ shortcode: 'hu', name: 'Hungarian' },
-		{ shortcode: 'id', name: 'Indonesian' },
-		{ shortcode: 'ms', name: 'Malay' },
-		{ shortcode: 'th', name: 'Thai' },
-		{ shortcode: 'uk', name: 'Ukrainian' },
-		{ shortcode: 'vi', name: 'Vietnamese' },
-		{ shortcode: 'pirate', name: 'Pirate' },
+	let languages: Array<{ shortcode: string; name: string; flagUnicode?: string }> = [
+		{ shortcode: 'en', name: 'English', flagUnicode: '🇺🇸' },
+		{ shortcode: 'de', name: 'German', flagUnicode: '🇩🇪' },
+		{ shortcode: 'fr', name: 'French', flagUnicode: '🇫🇷' },
+		{ shortcode: 'es', name: 'Spanish', flagUnicode: '🇪🇸' },
+		{ shortcode: 'it', name: 'Italian', flagUnicode: '🇮🇹' },
+		{ shortcode: 'pt', name: 'Portuguese', flagUnicode: '🇵🇹' },
+		{ shortcode: 'ru', name: 'Russian', flagUnicode: '🇷🇺' },
+		{ shortcode: 'zh', name: 'Chinese (Mandarin)', flagUnicode: '🇨🇳' },
+		{ shortcode: 'ja', name: 'Japanese', flagUnicode: '🇯🇵' },
+		{ shortcode: 'ko', name: 'Korean', flagUnicode: '🇰🇷' },
+		{ shortcode: 'sv', name: 'Swedish', flagUnicode: '🇸🇪' },
+		{ shortcode: 'nl', name: 'Dutch', flagUnicode: '🇳🇱' },
+		{ shortcode: 'no', name: 'Norwegian', flagUnicode: '🇳🇴' },
+		{ shortcode: 'da', name: 'Danish', flagUnicode: '🇩🇰' },
+		{ shortcode: 'ar', name: 'Arabic', flagUnicode: '🇸🇦' },
+		{ shortcode: 'hi', name: 'Hindi', flagUnicode: '🇮🇳' },
+		{ shortcode: 'tr', name: 'Turkish', flagUnicode: '🇹🇷' },
+		{ shortcode: 'pl', name: 'Polish', flagUnicode: '🇵🇱' },
+		{ shortcode: 'fi', name: 'Finnish', flagUnicode: '🇫🇮' },
+		{ shortcode: 'el', name: 'Greek', flagUnicode: '🇬🇷' },
+		{ shortcode: 'cs', name: 'Czech', flagUnicode: '🇨🇿' },
+		{ shortcode: 'hu', name: 'Hungarian', flagUnicode: '🇭🇺' },
+		{ shortcode: 'id', name: 'Indonesian', flagUnicode: '🇮🇩' },
+		{ shortcode: 'ms', name: 'Malay', flagUnicode: '🇲🇾' },
+		{ shortcode: 'th', name: 'Thai', flagUnicode: '🇹🇭' },
+		{ shortcode: 'uk', name: 'Ukrainian', flagUnicode: '🇺🇦' },
+		{ shortcode: 'vi', name: 'Vietnamese', flagUnicode: '🇻🇳' },
+		{ shortcode: 'pirate', name: 'Pirate', flagUnicode: '🏴‍☠️' },
 		{ shortcode: 'yoda', name: 'Yoda' },
 		{ shortcode: 'minion', name: 'Minion' }
 	];
@@ -115,19 +115,23 @@
 </script>
 
 <body>
-	<h1>TranslateGPT</h1>
+	<h1><span style="color: purple;">Foxy</span>Translate</h1>
 	<div class="frame">
 		<div class="translate-frame">
 			<div class="translate-fromto">
 				<select name="lang-from" id="lang-from" bind:value={langFrom}>
 					{#each languages as language}
-						<option value={language.shortcode}>{language.name}</option>
+						<option value={language.shortcode}
+							>{#if language.flagUnicode}{language.flagUnicode} | {/if}{language.name}</option
+						>
 					{/each}
 				</select>
 
 				<select name="lang-to" id="lang-to" bind:value={langTo}>
 					{#each languages as language}
-						<option value={language.shortcode}>{language.name}</option>
+						<option value={language.shortcode}
+							>{#if language.flagUnicode}{language.flagUnicode} | {/if}{language.name}</option
+						>
 					{/each}
 				</select>
 			</div>
