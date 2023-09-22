@@ -8,12 +8,10 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
-		"strict": true,
+		"strict": true
 	},
 
-	"files": [
-		"backend/main.ts"
-	]
+	"files": ["backend/main.ts"]
 
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
