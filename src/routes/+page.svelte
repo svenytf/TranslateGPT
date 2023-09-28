@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { Language } from '../types';
+
 	// Set default language
 	let langFrom: string = 'en';
 	let langTo: string = 'de';
@@ -15,9 +17,13 @@
 
 	// Initialize disabled state of input
 	let inputDisabled: boolean = false;
+	let translateStatus: string = 'Translate';
 
 	// Initialize languages
-	let languages: Array<{ shortcode: string; name: string; flagUnicode?: string }> = [
+	/**
+	 * TODO: Move these to an API endpoint and fetch them from there before rendering the page
+	 */
+	let languages: Language[] = [
 		{ shortcode: 'en', name: 'English', flagUnicode: '🇺🇸' },
 		{ shortcode: 'de', name: 'German', flagUnicode: '🇩🇪' },
 		{ shortcode: 'fr', name: 'French', flagUnicode: '🇫🇷' },
@@ -67,14 +73,15 @@
 			return;
 		}
 
-		// Disable input
+		// Disable input and button
 		inputDisabled = true;
+		translateStatus = 'Translating...';
 
-		// Set output to loading
-		output = 'Translating...';
+		// Empty output
+		output = '';
 
 		// Use local api to translate using POST request
-		const response = await fetch('http://localhost:5000/translate', {
+		const response = await fetch('api/translate', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -87,24 +94,40 @@
 			})
 		});
 
-		if (response === undefined) {
-			// Set output to error
-			output = 'Error: Unknown error.';
-		} else {
-			// Check if response is not OK
-			if (response.status !== 200) {
-				// Set output to error
-				output = 'Error: ' + response.status + ' ' + response.statusText;
-			} else {
-				// Get response as JSON
-				const data = await response.json();
-				console.log(data);
-				output = data.output;
+		// Read response
+		const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader();
+		if (!reader) return;
+		let finished: boolean = false;
+		while (finished) {
+			const { done, value } = await reader.read();
+			if (done) {
+				// This is to shush the linter without disabling this rule. Will try to find better way to do this. For now, this will do.
+				finished = true;
+				break;
+			}
+
+			// Parse chunks of data
+			const lines = value.split('\n');
+
+			// Parse lines, removing empty lines and [DONE] line as well as data: prefix
+			const parsedLines = lines
+				.map((line) => line.replace(/^data: /, '').trim())
+				.filter((line) => line !== '' && line !== '[DONE]')
+				.map((line) => JSON.parse(line));
+
+			// Set output to parsed lines
+			for (const line of parsedLines) {
+				// Check if line has content
+				if (line.choices[0].delta.content) {
+					// Append output
+					output += line.choices[0].delta.content;
+				}
 			}
 		}
 
-		// Re-enable input
+		// Re-enable input and button
 		inputDisabled = false;
+		translateStatus = 'Translate';
 	}
 
 	$: {
@@ -115,7 +138,7 @@
 </script>
 
 <body>
-	<h1><span style="color: purple;">Foxy</span>Translate</h1>
+	<h1>TranslateGPT</h1>
 	<div class="frame">
 		<div class="translate-frame">
 			<div class="translate-fromto">
@@ -161,8 +184,17 @@
 					placeholder="Context or hint"
 					bind:value={context}
 				/>
-				<input type="file" id="input-file" name="input-file" bind:files={inputFile} accept=".txt" />
-				<button id="translate-button" on:click={translate}>Translate</button>
+				<input
+					type="file"
+					id="input-file"
+					name="input-file"
+					bind:files={inputFile}
+					accept="text/*"
+					disabled={inputDisabled}
+				/>
+				<button id="translate-button" on:click={translate} disabled={inputDisabled}
+					>{translateStatus}</button
+				>
 			</div>
 		</div>
 	</div>
@@ -236,6 +268,8 @@
 		border-radius: 12px;
 
 		transition: 0.1s linear;
+
+		appearance: none;
 	}
 
 	.translate-fromto select:hover {
