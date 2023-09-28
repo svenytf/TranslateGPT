@@ -1,10 +1,6 @@
 /**
- * I don't know if the openai package has stream support, so I created this file to make it easier to use OpenAI's API.
- * I'm too lazy to check if the openai package has stream support, so instead of testing, which would take less time, I instead dedicated a few extra minutes than it would take to test, to create this file.
- * Everyone, clap for me.
- * - Sveny
+ * I wrote this file so that I can use streaming, as the openai npm package doesn't support it.
  */
-
 interface ChatCompletionMessage {
 	role: 'user' | 'bot' | 'system' | 'assistant';
 	content: string;
@@ -42,22 +38,6 @@ interface ChatCompletionRequest {
 	user?: string;
 }
 
-/* interface ChatCompletionResponse {
-    id: string;
-    object: 'chat.completion';
-    created: number;
-    model: string;
-    choices?: Array<{
-        index: number;
-        messages: ChatCompletionMessage[];
-    }>;
-    delta?: Array<{
-        index: number;
-        messages: ChatCompletionMessage[];
-    }>;
-    finish_reason: 'stop' | 'length' | 'content_filter' | 'function_call';
-} */
-
 export class openai {
 	apiKey: string;
 	model: string;
@@ -73,6 +53,14 @@ export class openai {
 		this.endpoint = endpoint;
 	}
 
+	/**
+	 * Translates text from one language to another.
+	 * @param text - The text to translate
+	 * @param targetLanguage - The language to translate to
+	 * @param sourceLanguage - The language to translate from
+	 * @param context - Additional information or instructions
+	 * @returns - A stream of the translated text
+	 */
 	async streamTranslate(
 		text: string,
 		targetLanguage: string,
@@ -93,6 +81,7 @@ export class openai {
 			throw new Error('Source language is missing');
 		}
 
+		// hardcoded until I figure out the best way to make it NOT hardcoded, for customisability.
 		const chatMessages: ChatCompletionMessage[] = [
 			{
 				role: 'system',
@@ -127,7 +116,7 @@ export class openai {
 		const apiKey = this.apiKey;
 
 		// get the response
-		const readableStream: Response = await fetch(endpoint, {
+		const response: Response = await fetch(endpoint, {
 			method: 'POST',
 			body: JSON.stringify(chatCompletionRequest),
 			headers: {
@@ -136,12 +125,6 @@ export class openai {
 			}
 		});
 
-		return readableStream;
+		return response;
 	}
 }
-
-/**
- * This file is a mess, and only temporary.
- * Please hire me, I'm a good programmer, I swear.
- * - Sveny
- */
