@@ -11,7 +11,7 @@
 		"strict": true
 	},
 
-	"include": ["src/**/*", "backend/**/*"],
+	"include": ["src/**/*", "backend/**/*"]
 
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
