@@ -1,5 +1,8 @@
 <script lang="ts">
 	import type { Language } from '../types';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	// Set default language
 	let langFrom: string = 'en';
@@ -20,41 +23,7 @@
 	let translateStatus: string = 'Translate';
 
 	// Initialize languages
-	/**
-	 * TODO: Move these to an API endpoint and fetch them from there before rendering the page
-	 */
-	let languages: Language[] = [
-		{ shortcode: 'en', name: 'English', flagUnicode: '🇺🇸' },
-		{ shortcode: 'de', name: 'German', flagUnicode: '🇩🇪' },
-		{ shortcode: 'fr', name: 'French', flagUnicode: '🇫🇷' },
-		{ shortcode: 'es', name: 'Spanish', flagUnicode: '🇪🇸' },
-		{ shortcode: 'it', name: 'Italian', flagUnicode: '🇮🇹' },
-		{ shortcode: 'pt', name: 'Portuguese', flagUnicode: '🇵🇹' },
-		{ shortcode: 'ru', name: 'Russian', flagUnicode: '🇷🇺' },
-		{ shortcode: 'zh', name: 'Chinese (Mandarin)', flagUnicode: '🇨🇳' },
-		{ shortcode: 'ja', name: 'Japanese', flagUnicode: '🇯🇵' },
-		{ shortcode: 'ko', name: 'Korean', flagUnicode: '🇰🇷' },
-		{ shortcode: 'sv', name: 'Swedish', flagUnicode: '🇸🇪' },
-		{ shortcode: 'nl', name: 'Dutch', flagUnicode: '🇳🇱' },
-		{ shortcode: 'no', name: 'Norwegian', flagUnicode: '🇳🇴' },
-		{ shortcode: 'da', name: 'Danish', flagUnicode: '🇩🇰' },
-		{ shortcode: 'ar', name: 'Arabic', flagUnicode: '🇸🇦' },
-		{ shortcode: 'hi', name: 'Hindi', flagUnicode: '🇮🇳' },
-		{ shortcode: 'tr', name: 'Turkish', flagUnicode: '🇹🇷' },
-		{ shortcode: 'pl', name: 'Polish', flagUnicode: '🇵🇱' },
-		{ shortcode: 'fi', name: 'Finnish', flagUnicode: '🇫🇮' },
-		{ shortcode: 'el', name: 'Greek', flagUnicode: '🇬🇷' },
-		{ shortcode: 'cs', name: 'Czech', flagUnicode: '🇨🇿' },
-		{ shortcode: 'hu', name: 'Hungarian', flagUnicode: '🇭🇺' },
-		{ shortcode: 'id', name: 'Indonesian', flagUnicode: '🇮🇩' },
-		{ shortcode: 'ms', name: 'Malay', flagUnicode: '🇲🇾' },
-		{ shortcode: 'th', name: 'Thai', flagUnicode: '🇹🇭' },
-		{ shortcode: 'uk', name: 'Ukrainian', flagUnicode: '🇺🇦' },
-		{ shortcode: 'vi', name: 'Vietnamese', flagUnicode: '🇻🇳' },
-		{ shortcode: 'pirate', name: 'Pirate', flagUnicode: '🏴‍☠️' },
-		{ shortcode: 'yoda', name: 'Yoda' },
-		{ shortcode: 'minion', name: 'Minion' }
-	];
+	let languages: Language[] = data.languages;
 
 	// Function for reading file and setting input
 	async function readFileInput(file: File) {
@@ -81,7 +50,7 @@
 		output = '';
 
 		// Use local api to translate using POST request
-		const response = await fetch('api/translate', {
+		const response = await fetch('/api/translate', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -98,7 +67,7 @@
 		const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader();
 		if (!reader) return;
 		let finished: boolean = false;
-		while (finished) {
+		while (!finished) {
 			const { done, value } = await reader.read();
 			if (done) {
 				// This is to shush the linter without disabling this rule. Will try to find better way to do this. For now, this will do.
