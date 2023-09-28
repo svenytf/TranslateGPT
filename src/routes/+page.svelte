@@ -149,7 +149,7 @@
 						>
 					{/each}
 				</select>
-
+	
 				<select name="lang-to" id="lang-to" bind:value={langTo}>
 					{#each languages as language}
 						<option value={language.shortcode}
@@ -244,7 +244,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: 50%;
+		width: 70%;
 	}
 
 	.translate-fromto {
@@ -327,5 +327,28 @@
 	#context-text {
 		width: 100%;
 		margin: 8px;
+	}
+
+	@media screen and (max-width: 1915px) {
+		.translate-frame {
+			width: 75%;
+		}
+	}
+
+	@media screen and (max-width: 1275px) {
+		.translate-frame {
+			width: 100%;
+		}
+
+		.translate-textareas {
+			flex-direction: column;
+			width: 100%;
+			height: 40rem !important;
+		}
+		
+		.translate-textareas textarea {
+			width: 100% !important;
+		}
+		
 	}
 </style>
