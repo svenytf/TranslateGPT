@@ -258,6 +258,14 @@
 		flex-direction: row;
 		align-items: center;
 		width: 100%;
+
+		margin: 8px;
+
+		height: 8rem;
+	}
+
+	.context-submit textarea {
+		height: 80%;
 	}
 
 	#translate-button {
@@ -269,6 +277,21 @@
 		resize: none;
 		margin: 8px;
 		padding: 8px;
+
+		font-size: 16px;
+
+		border-radius: 12px;
+		border: solid rgba(128, 0, 128, 0) 4px;
+		box-shadow: 0 0 8px rgba(0, 0, 0, 0.19);
+
+		transition: 0.1s linear;
+	}
+
+	#input-file {
+		margin: 8px;
+		padding: 8px;
+
+		height: 80%;
 
 		font-size: 16px;
 
