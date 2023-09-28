@@ -1,4 +1,4 @@
-# TranslateGPT
+![image](https://github.com/svenytf/TranslateGPT/assets/5344264/10060d12-125b-4da5-a430-e7e569605e50)# TranslateGPT
 
 ## Introduction
 
@@ -10,7 +10,7 @@ This project VERY WIP, as I learn SvelteKit, and Typescript, especially handling
 - Clone the repo
 
 ```bash
-git clone
+git clone https://github.com/svenytf/TranslateGPT
 ```
 
 - Install dependencies
