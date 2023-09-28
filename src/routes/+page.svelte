@@ -118,7 +118,7 @@
 						>
 					{/each}
 				</select>
-	
+
 				<select name="lang-to" id="lang-to" bind:value={langTo}>
 					{#each languages as language}
 						<option value={language.shortcode}
@@ -314,10 +314,9 @@
 			width: 100%;
 			height: 40rem !important;
 		}
-		
+
 		.translate-textareas textarea {
 			width: 100% !important;
 		}
-		
 	}
 </style>
