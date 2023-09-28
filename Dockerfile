@@ -20,7 +20,6 @@ EXPOSE 3000
 
 # Set environment variables
 ENV NODE_ENV=production
-ARG OPENAI_KEY
 
 # Run app
 CMD ["node", "build"]
