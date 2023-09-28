@@ -1,4 +1,4 @@
-![image](https://github.com/svenytf/TranslateGPT/assets/5344264/10060d12-125b-4da5-a430-e7e569605e50)# TranslateGPT
+# TranslateGPT
 
 ## Introduction
 
